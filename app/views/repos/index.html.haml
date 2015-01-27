@@ -1,0 +1,9 @@
+%ul.repo-list
+  - @repos.each do |repo|
+    %li.repo-list-item
+      .repo-list-stats
+        %span.repo-list-stat-item
+          %i.octicon.octicon-git-branch
+          = repo.branches.count
+      %h3.repo-list-name
+        = link_to repo.name, repo_path(repo.name)
