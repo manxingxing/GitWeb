@@ -22,7 +22,30 @@ class ReposController < ApplicationController
   end
 
   def commits
+    @commits = []
+    @finished = true
+    per_page = 15
+    params[:page] = (params[:page] || 1).to_i
+    skipped = 0
 
+    walker = Rugged::Walker.new(@repo.repository)
+    walker.sorting(Rugged::SORT_DATE)
+    walker.push @branch.target
+
+    walker.each_with_index do |commit, index|
+      next if index + 1 <= per_page * (params[:page] - 1)
+
+      if @commits.size >= per_page
+        @finished = false
+        break
+      else
+        @commits.push commit
+      end
+    end
+
+    @commits = @commits.group_by do |commit|
+      commit.time.strftime("%Y-%m-%d")
+    end
   end
 
   def commit
