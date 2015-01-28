@@ -12,10 +12,12 @@
           .container
             %h1.entry-title.public
               %span.mega-octicon.octicon-repo
-              = link_to 'Repositories', repos_path
+              = link_to 'Repositories', root_path
               - if @repo
                 %span.path-divider /
-                = link_to @repo.name, repo_path(@repo)
+                = link_to @repo.name, repo_path(repo: @repo.name)
         .container
           = yield
-
+        .site-footer
+          .container
+            = debug params

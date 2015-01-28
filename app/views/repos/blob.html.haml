@@ -1,0 +1,14 @@
+= render 'file_nav'
+
+.file-box
+  .file
+    .meta.clearfix
+      .info.file-name
+        %span= File.basename(params[:path])
+        %span.meta-divider
+        %span= number_to_human_size @blob.size
+    .blob-wrapper.data
+      - if @blob.binary?
+        %p Binary file not shown
+      - else
+        %pre= raw @blob.text

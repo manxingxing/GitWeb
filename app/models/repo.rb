@@ -16,6 +16,7 @@ class Repo
 
   def self.load_repos
     @repos = []
+    FileUtils.mkdir_p MONITORED_DIR unless File.directory? MONITORED_DIR
     Dir.glob(File.join(MONITORED_DIR, '*')).each do |entry|
       repo = self.new(entry)
       @repos.push(repo) unless repo.nil?
@@ -28,8 +29,8 @@ class Repo
     repos.detect {|repo| repo.name.downcase == name.strip.downcase}
   end
 
-  def method_missing method
-    repository.send method
+  def method_missing method, *args
+    repository.send method, *args
   end
 
   def to_param

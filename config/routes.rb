@@ -2,9 +2,15 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  resources :repos, only: [:show, :index]
-
   root 'repos#index'
+
+  scope ':repo', controller: 'repos' do
+    get 'commits/:ref', action: :commits, as: :repo_commits
+    get 'commit/:oid', action: :commit, as: :repo_commit
+    get 'blob/:ref/*path', action: :blob, as: :repo_blob, format: false
+    get 'tree/:ref/(*path)', action: :tree, as: :repo_tree
+    get '', action: :tree, as: :repo
+  end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

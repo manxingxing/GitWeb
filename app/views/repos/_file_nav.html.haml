@@ -1,0 +1,10 @@
+.file-navigation.in-mid-page
+  .right
+    = link_to repo_commits_path(repo: @repo.name, ref: @branch.name) do
+      .octicon.octicon-history
+      Commits
+  = select_tag 'branches', options_for_select(@repo.branches.map(&:name), @branch.name), class: 'left'
+  .breadcrumb
+    %span.repo-root
+      = link_to params[:repo], repo_tree_path(repo: params[:repo], ref: params[:ref])
+    = render_path_breadcumb
