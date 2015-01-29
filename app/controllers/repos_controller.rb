@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class ReposController < ApplicationController
   skip_before_action :load_repo, only: [:index]
   before_action :load_ref, only: [:tree, :blob, :commits]
@@ -26,7 +27,6 @@ class ReposController < ApplicationController
     @finished = true
     per_page = 15
     params[:page] = (params[:page] || 1).to_i
-    skipped = 0
 
     walker = Rugged::Walker.new(@repo.repository)
     walker.sorting(Rugged::SORT_DATE)
@@ -49,7 +49,14 @@ class ReposController < ApplicationController
   end
 
   def commit
+    @commit = @repo.lookup params[:oid]
 
+    if @commit.parents.empty?
+      @diff = @commit.diff(reverse: true)
+    else
+      @diff = @commit.parents[0].diff(@commit)
+    end
+    @diff.find_similar!
   end
 
 private

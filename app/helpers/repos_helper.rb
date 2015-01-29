@@ -32,4 +32,28 @@ module ReposHelper
       separator + link
     end.join('').html_safe
   end
+
+  def abbrev_sha shas, &block
+    abbreviated_shas = []
+    Rugged.minimize_oid(shas) do |oid|
+      abbreviated_shas.push oid
+    end
+
+    abbreviated_shas.zip(shas).each do |short, oid|
+      yield short, oid
+    end
+  end
+
+  def format_filename delta
+    new_path, old_path = delta.new_file[:path], delta.old_file[:path]
+    case delta.status
+    when :modified, :added, :typechange
+      filename = new_path
+    when :deleted, :ignored?, :untracked
+      filename = old_path
+    when :renamed, :copied?
+      filename = "#{old_path} -> #{new_path}"
+    end
+    filename
+  end
 end

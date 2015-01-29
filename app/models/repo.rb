@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Repo
   MONITORED_DIR = File.join(Rails.root, 'repos')
 
