@@ -1,5 +1,5 @@
 .file-navigation
-  = select_tag 'branches', options_for_select(@repo.branches.map(&:name), @branch.name), class: 'left'
+  = render 'branch_switcher'
 
 .commits-listing.commits-listing-padded
   - @commits.each do |day, commits|

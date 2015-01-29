@@ -14,3 +14,7 @@
  */
 @import "github";
 @import "github2";
+
+.octicon-diff-deleted {
+  @extend .octicon-diff-removed;
+}
