@@ -56,4 +56,13 @@ module ReposHelper
     end
     filename
   end
+
+  def highlight_code code, language
+    options = {:nowrap => 'False', linenos: 'table'}
+    if Pygments::Lexer.find(language)
+      Pygments.highlight(code, :lexer => language, options: options)
+    else
+      Pygments.highlight(code, :lexer => "text", options: options)
+    end
+  end
 end
