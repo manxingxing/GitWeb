@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 class ReposController < ApplicationController
   skip_before_action :load_repo, only: [:index]
-  before_action :load_ref, only: [:tree, :blob, :commits]
+  before_action :load_ref, only: [:tree, :blob, :commits, :edit_file, :update_file]
+  before_action :load_blob, only: [:blob, :edit_file, :update_file]
 
   def index
     @repos = Repo.repos
@@ -19,8 +20,35 @@ class ReposController < ApplicationController
   end
 
   def blob
-    @blob = @repo.blob_at(@branch.target.oid, params[:path])
   end
+
+  def edit_file
+  end
+
+  def update_file
+    index = @repo.repository.index
+    index.read_tree(@branch.target.tree)
+
+    new_blob = @repo.write(params[:content], :blob)
+    index.add({path: params[:path], oid: new_blob, mode: 0100644})
+    new_tree = index.write_tree(@repo.repository)
+
+    options = {tree: new_tree, message: params[:message]}
+    current_user = {
+      email: Rugged::Config.global['user.email'],
+      name:  Rugged::Config.global['user.name'],
+      time: Time.now
+    }
+    options[:author] = current_user
+    options[:committer] = current_user
+    options[:parents] = @repo.empty? ? [] : [ @branch.target ]
+    options[:update_ref] = @branch.canonical_name
+
+    Rugged::Commit.create(@repo.repository, options)
+
+    redirect_to repo_blob_path(repo: params[:repo], ref: params[:ref], path: params[:path])
+  end
+
 
   def commits
     @commits = []
@@ -63,5 +91,9 @@ private
   def load_ref
     params[:ref] ||= 'master'
     @branch = @repo.branches[params[:ref]]
+  end
+
+  def load_blob
+    @blob = @repo.blob_at(@branch.target.oid, params[:path])
   end
 end

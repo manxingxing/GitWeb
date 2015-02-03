@@ -13,7 +13,13 @@ class Repo
     @repository.nil?
   end
 
-  class << self; attr_reader :repos; end
+  class << self
+    attr_reader :repos
+
+    def [] name
+      repos.detect {|repo| repo.name.downcase == name.downcase}
+    end
+  end
 
   def self.load_repos
     @repos = []

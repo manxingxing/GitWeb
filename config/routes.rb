@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     get 'commits/:ref', action: :commits, as: :repo_commits
     get 'commit/:oid', action: :commit, as: :repo_commit
     get 'blob/:ref/*path', action: :blob, as: :repo_blob, format: false
+    get 'edit_file/:ref/*path', action: :edit_file, as: :repo_edit_file, format: false
+    post 'update_file/:ref/*path', action: :update_file, as: :repo_update_file, format: false
     get 'tree/:ref/(*path)', action: :tree, as: :repo_tree
     get '', action: :tree, as: :repo
   end
