@@ -4,7 +4,5 @@
     Commits
   = render 'branch_switcher'
   .breadcrumb
-    %span.repo-root
-      = link_to params[:repo], repo_tree_path(repo: params[:repo], ref: params[:ref])
     = render_path_breadcumb
 

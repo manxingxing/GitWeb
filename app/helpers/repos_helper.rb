@@ -23,14 +23,28 @@ module ReposHelper
   end
 
   def render_path_breadcumb
-    parts = (params[:path] || '').split('/')
-    html = parts.map.with_index do |entry, index|
-      separator = content_tag(:span, '/', class: 'separator')
-      link = content_tag :span do
-        link_to entry, repo_tree_path(repo: params[:repo], ref: params[:ref], path: parts.take(index + 1))
+    paths = (params[:path] || '').split('/')
+    final_path = paths.pop
+
+    links = []
+
+    repo_name = content_tag :span, class: 'repo-root' do
+      link_to params[:repo], repo_tree_path(repo: params[:repo], ref: params[:ref])
+    end
+
+    links.push repo_name
+
+    paths.each_with_index do |path, index|
+      path_link = content_tag :span do
+        link_to path, repo_tree_path(repo: params[:repo], ref: params[:ref], path: paths.take(index + 1) )
       end
-      separator + link
-    end.join('').html_safe
+      links.push path_link
+    end
+
+    if final_path
+      links.push(content_tag(:strong, final_path, class: 'final-path'))
+    end
+    links.join("<span class='separator'>/</span>").html_safe
   end
 
   def abbrev_sha shas, &block
