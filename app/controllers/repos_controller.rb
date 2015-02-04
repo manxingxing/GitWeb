@@ -29,7 +29,7 @@ class ReposController < ApplicationController
     index = @repo.repository.index
     index.read_tree(@branch.target.tree)
 
-    new_blob = @repo.write(params[:content], :blob)
+    new_blob = @repo.write(params[:content].delete!("\r"), :blob)
     index.add({path: params[:path], oid: new_blob, mode: 0100644})
     new_tree = index.write_tree(@repo.repository)
 
