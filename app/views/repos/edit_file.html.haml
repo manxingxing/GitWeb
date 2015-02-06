@@ -6,46 +6,44 @@
     .file.js-code-editor.container-preview.show-code
       .commit-create
         = text_area_tag :content, @blob.content.force_encoding('UTF-8'), id: 'blob_contents', class: 'file-editor-textarea js-blob-contents js-code-textarea', autofocus: true, rows: 35
-      .textarea-proxy.ace-github-light
     .commit-message-box
       %h3.file-commit-form-heading Commit changes
       = text_area_tag :message, nil, class: 'input-block input-contrast', placeholder: "Update #{File.basename(params[:path])}", rows: 2
     = submit_tag 'Commit Changes', class: 'button primary js-blob-submit', disabled: true, id: 'submit-btn'
     = link_to 'Cancel', repo_blob_path(repo: params[:repo], ref: params[:ref], path: params[:path]), class: 'button danger cancel'
 
-= javascript_include_tag 'editor'
+= javascript_include_tag 'ace-min/ace.js', 'data-turbolinks-track' => false
 
 :javascript
-  window.onload = function(){
-    var textArea = $("#blob_contents"),
-        textAreaProxy = $(".textarea-proxy")[0],
-        submitBtn = $("#submit-btn"),
-        messageBox = $("#message"),
-        editor = ace.edit(textAreaProxy);
-    // hide the original textarea
-    textArea.hide();
-    // setup ace eidtor
-    editor.$blockScrolling = Infinity;
-    editor.setTheme("ace/theme/github");
-    var editorSession = editor.getSession();
-    editorSession.setMode("ace/mode/#{Linguist.new(params[:path]).language.ace_mode}");
-    // fill content
-    var originalContent = textArea.val();
-    editorSession.setValue(originalContent);
+  var bla;
+  $(function(){
+    var textArea = $("#blob_contents").hide(),
+        originalContent = textArea.val(),
+        editorContainer = $('<div class="ace-github-light"></div>').insertAfter(textArea).css({width: '100%', height: '500px'}),
+        commitForm = $('form.edit-blob-form'),
+        submitBtn = $('#submit-btn', commitForm),
+        messageBox = $("#message", commitForm);
+      // setup ace eidtor
+      var editor = ace.edit(editorContainer[0]);
+      bla = editor;
+      editor.$blockScrolling = Infinity;
+      editor.setTheme("ace/theme/github");
+      editor.getSession().setMode("ace/mode/#{Linguist.new(params[:path]).language.ace_mode}");
+      editor.getSession().setValue(originalContent);
+      // 更新提交按钮状态
+      editor.on('change',function(){
+        if (editor.getSession().getValue() == originalContent){
+          submitBtn.attr("disabled", true);
+        } else {
+          submitBtn.attr("disabled", false);
+        }
+      });
 
-    editor.on('change',function(){
-      if (editor.getValue() == originalContent){
-        submitBtn.attr("disabled", true);
-      } else {
-        submitBtn.attr("disabled", false);
-      }
-    })
-
-    $(".edit-blob-form").submit(function(){
-      textArea.val(editorSession.getValue());
-      var message = messageBox.val();
-      if ($.trim(message) === ''){
-        messageBox.val(messageBox.attr('placeholder'));
-      }
-    });
-  };
+      commitForm.submit(function(){
+        textArea.val(editor.getSession().getValue());
+        var message = messageBox.val();
+        if ($.trim(message) === ''){
+          messageBox.val(messageBox.attr('placeholder'));
+        }
+      });
+  });
