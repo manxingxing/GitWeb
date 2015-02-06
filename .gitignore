@@ -17,3 +17,5 @@
 /tmp
 /repos/
 !/repos/.keep
+/public/assets/
+/.idea/
