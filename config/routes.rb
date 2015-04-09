@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   root 'repos#index'
 
-  scope ':repo', controller: 'repos' do
+  scope ':repo', controller: 'repos', constraints: { repo: /[\w._-]+/ } do
     get 'commits/:ref', action: :commits, as: :repo_commits
     get 'commit/:oid', action: :commit, as: :repo_commit
     get 'blob/:ref/*path', action: :blob, as: :repo_blob, format: false
