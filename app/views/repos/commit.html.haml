@@ -10,9 +10,9 @@
       - abbrev_sha(@commit.parent_ids) do |short, oid|
         = link_to short, repo_commit_path(repo: params[:repo], oid: oid)
     .authorship
-      %span.author-name= @commit.committer[:name]
+      %span.author-name= @commit.author[:name]
       authored on
-      = @commit.time.strftime("%Y-%m-%d %H:%M")
+      = @commit.author[:time].strftime("%Y-%m-%d %H:%M")
 
 #toc.details-collapse.table-of-contents.open
   .toc-diff-stats
