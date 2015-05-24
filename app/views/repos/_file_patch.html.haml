@@ -23,8 +23,6 @@
               - type = line.addition? ? 'addition' : (line.deletion? ? 'deletion' : '')
               - indicator = line.addition? ? "+ " : (line.deletion? ? '- ' : '  ')
               %tr
-                %td.blob-num{class: type.blank? ? '' : 'blob-num-' + type}
-                  = line.old_lineno > 0 ? line.old_lineno : ''
-                %td.blob-num{class: type.blank? ? '' : 'blob-num-' + type}
-                  = line.new_lineno > 0 ? line.new_lineno : ''
+                %td.blob-num{class: type.blank? ? '' : 'blob-num-' + type, "data-line-number" => line.old_lineno > 0 ? line.old_lineno: nil}
+                %td.blob-num{class: type.blank? ? '' : 'blob-num-' + type, "data-line-number" => line.new_lineno > 0 ? line.new_lineno: nil}
                 %td.blob-code{class: type.blank? ? '' : 'blob-code-' + type} #{indicator}  #{line.content.force_encoding("UTF-8")}

@@ -18,6 +18,9 @@
 .octicon-diff-deleted {
   @extend .octicon-diff-removed;
 }
+.octicon-diff-copied {
+  @extend .octicon-diff-renamed;
+}
 .commit-message-box {
   padding: 15px;
   margin-bottom: 10px;

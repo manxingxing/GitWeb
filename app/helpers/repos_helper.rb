@@ -60,15 +60,17 @@ module ReposHelper
 
   def format_filename delta
     new_path, old_path = delta.new_file[:path], delta.old_file[:path]
+
     case delta.status
     when :modified, :added, :typechange
-      filename = new_path
-    when :deleted, :ignored?, :untracked
-      filename = old_path
-    when :renamed, :copied?
-      filename = "#{old_path} -> #{new_path}"
+      new_path
+    when :deleted, :ignored, :untracked
+      old_path
+    when :renamed
+      abbr_path_change(old_path, new_path, " &rarr; ")
+    when :copied
+      abbr_path_change(old_path, new_path, " &rArr; ")
     end
-    filename
   end
 
   def highlight_code code, language
@@ -77,6 +79,21 @@ module ReposHelper
       Pygments.highlight(code, :lexer => language, options: options)
     else
       Pygments.highlight(code, :lexer => "text", options: options)
+    end
+  end
+
+private
+  def abbr_path_change old_path, new_path, separator = " &rarr; "
+    old_path_segments = old_path.split('/')
+    new_path_segments = new_path.split('/')
+
+    uncommonIdx = old_path_segments.zip(new_path_segments).index {|old, new| old != new } || 0
+
+    if uncommonIdx == 0
+      [old_path, new_path].join(separator).html_safe
+    else
+      path_change = [old_path_segments.drop(uncommonIdx).join('/'), new_path_segments.drop(uncommonIdx).join('/')].join(separator)
+      [old_path_segments.take(uncommonIdx).join('/'), "{#{path_change}}"].join('/').html_safe
     end
   end
 end
