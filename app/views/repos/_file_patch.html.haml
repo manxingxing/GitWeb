@@ -21,8 +21,8 @@
             - hunk.each_line do |line|
               - next if line.eof_newline_added? or line.eof_newline_removed? or line.eof_no_newline?
               - type = line.addition? ? 'addition' : (line.deletion? ? 'deletion' : '')
-              - indicator = line.addition? ? "+ " : (line.deletion? ? '- ' : '  ')
+              - indicator = line.addition? ? "+" : (line.deletion? ? '-' : ' ')
               %tr
                 %td.blob-num{class: type.blank? ? '' : 'blob-num-' + type, "data-line-number" => line.old_lineno > 0 ? line.old_lineno: nil}
                 %td.blob-num{class: type.blank? ? '' : 'blob-num-' + type, "data-line-number" => line.new_lineno > 0 ? line.new_lineno: nil}
-                %td.blob-code{class: type.blank? ? '' : 'blob-code-' + type} #{indicator}  #{line.content.force_encoding("UTF-8")}
+                %td.blob-code{class: type.blank? ? '' : 'blob-code-' + type} #{indicator} #{line.content.force_encoding("UTF-8")}

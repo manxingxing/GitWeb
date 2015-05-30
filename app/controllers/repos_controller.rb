@@ -52,8 +52,9 @@ class ReposController < ApplicationController
 
   def commits
     @commits = []
+    n = 0
+    per_page = 35
     @finished = true
-    per_page = 15
     params[:page] = (params[:page] || 1).to_i
 
     walker = Rugged::Walker.new(@repo.repository)
@@ -63,12 +64,14 @@ class ReposController < ApplicationController
     walker.each_with_index do |commit, index|
       next if index + 1 <= per_page * (params[:page] - 1)
 
-      if @commits.size >= per_page
+      if n == per_page
         @finished = false
         break
       else
         @commits.push commit
+        n += 1
       end
+
     end
 
     @commits = @commits.group_by do |commit|
