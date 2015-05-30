@@ -1,17 +1,17 @@
 = render 'file_nav'
 
 .commit.commit-tease.js-details-container
-  %p.commit-title
+  p.commit-title
     = link_to @branch.target.message, repo_commit_path(repo: params[:repo], oid: @branch.target.oid)
 .file-wrap
-  %table.files
-    %tbody
+  table.files
+    tbody
       - @tree.each do |entry|
-        %tr
-          %td.icon
+        tr
+          td.icon
             = file_icon entry
-          %td.content
-            %span.css-truncate.css-truncate-target
+          td.content
+            span.css-truncate.css-truncate-target
               = file_link entry
-          %td.message
-          %td.age
+          td.message
+          td.age

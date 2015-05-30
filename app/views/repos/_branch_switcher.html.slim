@@ -1,18 +1,18 @@
 .select-menu.left
-  %span.minibutton.select-menu-button.css-truncate
-    %span.octicon.octicon-git-branch
-    %span.css-truncate-target= params[:ref]
+  span.minibutton.select-menu-button.css-truncate
+    span.octicon.octicon-git-branch
+    span.css-truncate-target=< params[:ref]
   .select-menu-modal-holder
     .select-menu-modal
       .select-menu-header
-        %span.select-menu-title Select Branch
-        %span.octicon.octicon-x.select-menu-close
+        span.select-menu-title Select Branch
+        span.octicon.octicon-x.select-menu-close
       .select-menu-list.selected
         - @repo.branches.each do |branch|
-          .select-menu-item{class: branch.name.eql?(params[:ref]) ? 'selected' : ''}
-            %span.select-menu-item-icon.octicon.octicon-check
+          .select-menu-item class= (branch.name.eql?(params[:ref]) ? 'selected' : '')
+            span.select-menu-item-icon.octicon.octicon-check
             = link_to branch.name, url_for(controller: params[:controller], action: params[:action], repo: params[:repo], ref: branch.name, path: params[:path]), class: 'select-menu-item-text css-truncate-target'
-  :javascript
+  javascript:
     $(function(){
       $(".select-menu-button").click(function(){
         $(this).parent('.select-menu').toggleClass('active');

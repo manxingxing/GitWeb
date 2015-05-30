@@ -1,7 +1,7 @@
 .file-navigation.in-mid-page
   = link_to repo_commits_path(repo: @repo.name, ref: @branch.name), class: 'right' do
     .octicon.octicon-history
-    Commits
+    |  Commits
   = render 'branch_switcher'
   .breadcrumb
     = render_path_breadcumb

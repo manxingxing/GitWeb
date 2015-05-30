@@ -58,6 +58,21 @@ module ReposHelper
     end
   end
 
+  def lexer_for_delta delta
+    new_path, old_path = delta.new_file[:path], delta.old_file[:path]
+
+    path = case delta.status
+    when :modified, :added, :typechange, :renamed, :copied
+      new_path
+    when :deleted, :ignored, :untracked
+      old_path
+    end
+
+    language = Linguist.new(path).language.ace_mode
+
+    Pygments::Lexer.find(language) ? language : nil
+  end
+
   def format_filename delta
     new_path, old_path = delta.new_file[:path], delta.old_file[:path]
 
@@ -79,6 +94,14 @@ module ReposHelper
       Pygments.highlight(code, :lexer => language, options: options)
     else
       Pygments.highlight(code, :lexer => "text", options: options)
+    end
+  end
+
+  def highlight_diff code, lexer
+    if lexer
+      Pygments.highlight(code, :lexer => lexer, options: {nowrap: 'True'}).try(:html_safe) || code
+    else
+      code
     end
   end
 

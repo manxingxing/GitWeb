@@ -88,6 +88,8 @@ class ReposController < ApplicationController
       @diff = @commit.parents[0].diff(@commit)
     end
     @diff.find_similar!
+
+    render stream: true
   end
 
 private

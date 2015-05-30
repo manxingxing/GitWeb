@@ -4,23 +4,23 @@
 .commits-listing.commits-listing-padded
   - @commits.each do |day, commits|
     .commit-group-title
-      %span.octicon.octicon-git-commit
-      Commits on #{day}
-    %ol.commit-group.table-list.table-list-bordered
+      span.octicon.octicon-git-commit
+      | Commits on #{day}
+    ol.commit-group.table-list.table-list-bordered
       - commits.each do |commit|
-        %li.commit.commits-list-item.table-list-item
-          .table-list-cell{style: 'width:120px;color:#333;font-size:13px;'}
+        li.commit.commits-list-item.table-list-item
+          .table-list-cell style='width:120px;color:#333;font-size:13px;'
             = commit.committer[:name]
           .table-list-cell
-            %p.commit-title
+            p.commit-title
               = link_to commit.message, repo_commit_path(oid: commit.oid)
 .paginate-container
   .pagination
     - if params[:page] > 1
       = link_to 'Newer', repo_commits_path(repo: params[:repo], ref: params[:ref], page: params[:page] - 1)
     - else
-      %span.disabled Newer
+      span.disabled Newer
     - if @finished
-      %span.disabled Older
+      span.disabled Older
     - else
       = link_to 'Older', repo_commits_path(repo: params[:repo], ref: params[:ref], page: params[:page] + 1)

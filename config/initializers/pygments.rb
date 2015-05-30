@@ -1,0 +1,1 @@
+ENV['MENTOS_TIMEOUT'] = '1'

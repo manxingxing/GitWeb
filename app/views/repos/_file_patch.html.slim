@@ -1,0 +1,37 @@
+- delta = patch.delta
+- lexer = lexer_for_delta(delta)
+.file id="diff-#{index}"
+  .meta
+    .info
+      span= format_filename(delta)
+  - if patch.changes == 0
+    .data.highlight.empty
+      - if delta.binary?
+        | Binary file not shown
+      - elsif delta.renamed?
+        | File renamed without changes
+  - else
+    - if index > 250
+      .data.highlight.empty
+        | Sorry, we could not display the changes to this file because there were too many other changes to display.
+    - else
+      .data.highlight.blob-wrapper
+        table.diff-table
+          tbody
+            - patch.each_hunk do |hunk|
+              tr
+                td.blob-num ...
+                td.blob-num ...
+                td.blob-code.blob-code-hunk
+                  | @@ -#{hunk.old_start},#{hunk.old_lines} +#{hunk.new_start},#{hunk.new_lines}
+              - hunk.each_line do |line|
+                - next if line.eof_newline_added? or line.eof_newline_removed? or line.eof_no_newline?
+                - type = line.addition? ? 'addition' : (line.deletion? ? 'deletion' : '')
+                - indicator = line.addition? ? "+" : (line.deletion? ? '-' : ' ')
+                tr
+                  td.blob-num class=(type.blank? ? '' : 'blob-num-' + type) data-line-number=(line.old_lineno > 0 ? line.old_lineno : nil)
+                  td.blob-num class=(type.blank? ? '' : 'blob-num-' + type) data-line-number=(line.new_lineno > 0 ? line.new_lineno : nil)
+                  td.blob-code class=(type.blank? ? '' : 'blob-code-' + type)
+                    = indicator
+                    / = line.content.force_encoding("UTF-8")
+                    = highlight_diff(line.content.force_encoding("UTF-8"), lexer)
