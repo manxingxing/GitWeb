@@ -1,28 +1,12 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 大致功能
+* git diff
+* git log
+* 查看目录树及文件内容
+* 修改文件内容并提交
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+## 运行方式
+1. 把 git 裸仓库(bare repository) 放到本项目的 `repos` 文件夹下
+2. `bundle install`
+3. `rails server`
